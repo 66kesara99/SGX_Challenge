@@ -1,0 +1,20 @@
+enclave {
+    include "sgx_tcrypto.h"
+    include "sgx_tseal.h"
+    
+    untrusted {
+        /*
+         * ocall_write - invokes OCALL to display string buffer inside the enclave.
+         *  [in]: copy the string buffer to App outside.
+         *  [string]: specifies 'str' is a NULL terminated buffer.
+         */
+        sgx_status_t ocall_write([in, size=buflen] const uint8_t *buf, int32_t buflen);
+        void print_string_ocall([in, string] const char *str);
+    };
+
+    trusted {
+        public int ecall_enclave_init(/* TODO parameters */);
+        public int ecall_sign(/* TODO parameters */);
+        public int ecall_shutdown(/* TODO parameters */);
+    };
+};

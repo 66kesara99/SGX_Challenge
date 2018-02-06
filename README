@@ -1,0 +1,16 @@
+This is a skeleton code for MSS course SGX challenge.
+Before compiling clone the Linux SGX SDK repository into ../linux-sgx, or
+modify buildenv.mk to point to the right location.
+Build and install Linux SGX SDK to /opt/intel/sgxsdk, or modify
+task-1(2)-2018/Makefile to point to the right location.
+
+Task 1.
+Instructions are on MyCourses, and the files contain TODO items.
+Start with implementing the enclave, then with the help of utils
+functions create it and call it.
+
+Task 2.
+Install boost_system and boost_program_options for your Linux distribution.
+Run make in libs/lib_la.
+After the library is built implement the necessary enclave functions.
+Similarly to task-1 invoke the enclave from the main program.
