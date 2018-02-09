@@ -88,5 +88,10 @@ sgx_status_t enclave_sign(sgx_enclave_id_t eid,
 // Call ecall_shutdown
 sgx_status_t enclave_shutdown(sgx_enclave_id_t eid)
 {
-    return SGX_SUCCESS;
+
+    sgx_status_t ret;
+    ret = sgx_destroy_enclave(eid);
+
+    return ret;
+    
 }
