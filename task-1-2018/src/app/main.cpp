@@ -20,6 +20,8 @@
 #include "utils.h"
 #include <stdlib.h>
 
+#define SIZE 100
+
 /* OCall functions */
 sgx_status_t ocall_write(const uint8_t *buf, int32_t buflen)
 {
@@ -50,7 +52,7 @@ int main(int argc, char* argv[])
     sgx_status_t ret;
     sgx_enclave_id_t eid;
 
-    char* data;
+    char data[SIZE];
     sgx_rsa3072_signature_t signature;
     
     // TODO
@@ -64,22 +66,32 @@ int main(int argc, char* argv[])
 
     // Allow to specify sealed data path
 
-    enclave_init(eid);
+    printf("Loading the key..\n");
+    ret = enclave_init(eid);
+    check_errors(ret);
+    printf("Key loaded!\n");
+
     // Take input data to be signed
+    printf("Input data to create signature..\n");
+    scanf("%s", data);
+    
     // Call enclave to sign the data
 
+    printf("Calling enclave to sign the data..\n");
     ret = enclave_sign(eid, data, &signature);
     check_errors(ret);
     printf("Sign Data Success!\n");
   
     
     // Print out the signature
+
+    printf("The signature...\n");
+    printf("%s\n", data);
+
     // Shutdown the enclave and store the sealed data
 
-    printf("Destroying an enclave..\n");
-
+    printf("Destroying the enclave..\n");
     enclave_shutdown(eid);
-
     check_errors(ret);
     printf("Enclave Destroyed!\n");
     

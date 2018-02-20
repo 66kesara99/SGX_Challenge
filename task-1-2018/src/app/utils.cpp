@@ -1,9 +1,14 @@
 #include <string.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <pwd.h>
 
 #include "sgx_uae_service.h"
 
 #include "enclave_u.h"
+
+#define TOKEN_FILENAME "enclave.token"
+#define MAX_PATH FILENAME_MAX
 
 // Utilities
 int hex2bytes(const char* hex, int len, char* res) {
@@ -48,11 +53,7 @@ sgx_status_t create_enclave(const char* enclave_filename, sgx_enclave_id_t *eid)
     sgx_status_t ret = SGX_ERROR_UNEXPECTED;
 
     /* Debug Support: set 2nd parameter to 1 */
-    return sgx_create_enclave(enclave_filename,
-                              SGX_DEBUG_FLAG,
-                              &launch_token,
-                              &launch_token_update,
-                              eid, NULL);
+    return sgx_create_enclave(enclave_filename, SGX_DEBUG_FLAG, &launch_token, &launch_token_update, eid, NULL);
 }
 
 // TODO
@@ -81,6 +82,14 @@ sgx_status_t enclave_sign(sgx_enclave_id_t eid,
                           const char *data,
                           sgx_rsa3072_signature_t *signature)
 {
+    sgx_status_t ret = SGX_ERROR_UNEXPECTED;
+    int status = SGX_SUCCESS;
+    
+    ret = ecall_sign(eid, &status);
+    if (ret != SGX_SUCCESS) {
+        return ret;
+    }
+    
     return SGX_SUCCESS;
 }
 
@@ -89,7 +98,14 @@ sgx_status_t enclave_sign(sgx_enclave_id_t eid,
 sgx_status_t enclave_shutdown(sgx_enclave_id_t eid)
 {
 
-    sgx_status_t ret;
+    sgx_status_t ret = SGX_ERROR_UNEXPECTED;
+    int status = SGX_SUCCESS;
+        
+    ret = ecall_shutdown(eid, &status);
+    if (ret != SGX_SUCCESS) {
+        return ret;
+    }
+    
     ret = sgx_destroy_enclave(eid);
 
     return ret;

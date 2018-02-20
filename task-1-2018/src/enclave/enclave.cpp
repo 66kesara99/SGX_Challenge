@@ -22,6 +22,9 @@ static bool initialized = false;
 #define SGX_MISCSEL_EXINFO     0x00000001  /* report #PF and #GP inside enclave */
 #define TSEAL_DEFAULT_MISCMASK (~SGX_MISCSEL_EXINFO)
 
+#define BUF_SIZE 100
+char buf[BUF_SIZE];  // Buffer for printfs
+
 // Enclave API
 // TODO
 // Unseals the key or generates a new key
@@ -30,6 +33,10 @@ int ecall_enclave_init()
 {
     initialized = true;
 
+    strncpy(buf, "Loading key from the memory..\n", BUF_SIZE);
+    print_string_ocall(buf);
+    strncpy(buf, "Generating a new key..\n", BUF_SIZE);
+    print_string_ocall(buf);
     return SGX_SUCCESS;
 }
 
@@ -41,6 +48,8 @@ int ecall_sign()
         return SGX_ERROR_UNEXPECTED;
     }
 
+    strncpy(buf, "Signing the key..\n", BUF_SIZE);
+    print_string_ocall(buf);
     return SGX_SUCCESS;
 }
 
@@ -50,5 +59,9 @@ int ecall_shutdown()
 {
     initialized = false;
 
+    strncpy(buf, "Saving key to the storage..\n", BUF_SIZE);
+    print_string_ocall(buf);
+    strncpy(buf, "enclave is shutting down..\n", BUF_SIZE);
+    print_string_ocall(buf);
     return SGX_SUCCESS;
 }
